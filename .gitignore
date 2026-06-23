@@ -31,3 +31,6 @@ web-ext-config.cjs
 # Local HTML fixtures (saved Amazon pages for selector research)
 *.htm
 *_files/
+
+# Local agent context (not for public repo)
+.grok/
