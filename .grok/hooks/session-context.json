@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "pwsh -NoProfile -ExecutionPolicy Bypass -File .grok/hooks/scripts/session-end-update-context.ps1",
+            "timeout": 180
+          }
+        ]
+      }
+    ]
+  }
+}
