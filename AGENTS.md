@@ -2,8 +2,9 @@
 
 **At the start of every session in this repo**, before answering or editing anything:
 
-1. Read `.grok/PROJECT_CONTEXT.md` if it exists (full project handoff).
-2. If missing, read `docs/ARCHITECTURE.md` and `README.md`.
+1. Load project skill `affiliate-link-batch` (`.grok/skills/affiliate-link-batch/`).
+2. Read `.grok/PROJECT_CONTEXT.md` if it exists (full project handoff).
+3. If missing, read `docs/ARCHITECTURE.md` and `README.md`.
 
 ---
 
