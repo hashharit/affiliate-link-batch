@@ -35,3 +35,5 @@ web-ext-config.cjs
 # Local extended agent context (AGENTS.md + .grok/rules/ are auto-loaded by Grok)
 .grok/PROJECT_CONTEXT.md
 .grok/README.md
+.grok/.hook-session-start
+.grok/.hook-cursor-session-start

@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "command": "pwsh -NoProfile -ExecutionPolicy Bypass -File .cursor/hooks/session-start-marker.ps1"
+      }
+    ],
+    "sessionEnd": [
+      {
+        "command": "pwsh -NoProfile -ExecutionPolicy Bypass -File .cursor/hooks/session-end-update-context.ps1",
+        "timeout": 180
+      }
+    ]
+  }
+}
