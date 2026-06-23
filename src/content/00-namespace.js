@@ -1,0 +1,1 @@
+window.ALB = window.ALB || {};

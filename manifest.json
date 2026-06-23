@@ -1,0 +1,66 @@
+{
+  "manifest_version": 3,
+  "name": "Affiliate Link Batch",
+  "version": "1.0.0",
+  "description": "Batch-copy Amazon SiteStripe affiliate links from search results.",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "affiliate-link-batch@github.com",
+      "strict_min_version": "140.0",
+      "homepage_url": "https://github.com/hashharit/affiliate-link-batch",
+      "data_collection_permissions": {
+        "required": ["none"],
+        "optional": []
+      }
+    }
+  },
+  "permissions": [
+    "tabs",
+    "scripting",
+    "storage",
+    "clipboardWrite",
+    "clipboardRead"
+  ],
+  "host_permissions": [
+    "https://www.amazon.in/*",
+    "https://www.amazon.com/*"
+  ],
+  "background": {
+    "scripts": [
+      "src/background/settings-bg.js",
+      "src/background/format-output-bg.js",
+      "src/background/sitestripe-api-bg.js",
+      "src/background/worker-tab.js",
+      "src/background/batch-orchestrator.js",
+      "src/background/service-worker.js"
+    ]
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.amazon.in/*",
+        "https://amazon.in/*",
+        "https://www.amazon.com/*",
+        "https://amazon.com/*"
+      ],
+      "js": [
+        "src/content/00-namespace.js",
+        "src/content/01-settings.js",
+        "src/content/02-messaging.js",
+        "src/content/03-amazon-adapter.js",
+        "src/content/04-checkbox-injector.js",
+        "src/content/05-floating-button.js",
+        "src/content/06-run-history.js",
+        "src/content/06-dialog.js",
+        "src/content/07-main.js"
+      ],
+      "css": ["src/content/dialog/dialog.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "icons": {
+    "48": "icons/icon-48.png",
+    "96": "icons/icon-96.png",
+    "128": "icons/icon-128.png"
+  }
+}

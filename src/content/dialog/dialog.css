@@ -1,0 +1,417 @@
+.alb-checkbox-wrap {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 6;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  cursor: pointer;
+}
+
+.alb-checkbox-wrap input {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  border: 1px solid #888c8c;
+  border-radius: 3px;
+  background: #fff;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+.alb-checkbox-wrap input:hover {
+  border-color: #ff9900;
+}
+
+.alb-checkbox-wrap input:checked {
+  border-color: #ff9900;
+  background: #ff9900;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 10'%3E%3Cpath fill='none' stroke='%23fff' stroke-width='2' d='M1 5l3 3 7-7'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 12px 10px;
+}
+
+.alb-checkbox-wrap input:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.alb-floating-root {
+  position: fixed;
+  top: 120px;
+  right: 16px;
+  z-index: 2147483646;
+}
+
+.alb-floating-bar {
+  display: flex;
+  align-items: stretch;
+  box-shadow: 0 2px 6px rgba(213, 217, 217, 0.55);
+}
+
+.alb-floating-button {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 200px;
+  padding: 10px 14px;
+  border: 1px solid #fcd200;
+  border-right: 0;
+  border-radius: 8px 0 0 8px;
+  background: linear-gradient(180deg, #ffe08a 0%, #ffd814 55%, #f7ca00 100%);
+  color: #0f1111;
+  font: 13px/1.3 "Amazon Ember", Arial, sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.alb-floating-button:hover:not(:disabled) {
+  background: linear-gradient(180deg, #ffe89a 0%, #f7ca00 100%);
+  border-color: #f2c200;
+}
+
+.alb-floating-button:disabled {
+  background: #fff8d6;
+  border-color: #e3e6e6;
+  color: #565959;
+  font-weight: 500;
+  cursor: default;
+}
+
+.alb-floating-history {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  padding: 0;
+  border: 1px solid #fcd200;
+  border-radius: 0 8px 8px 0;
+  background: linear-gradient(180deg, #ffe08a 0%, #ffd814 55%, #f7ca00 100%);
+  color: #0f1111;
+  cursor: pointer;
+}
+
+.alb-floating-history:hover {
+  background: linear-gradient(180deg, #ffe89a 0%, #f7ca00 100%);
+  border-color: #f2c200;
+}
+
+.alb-floating-history-icon {
+  display: block;
+}
+
+.alb-floating-history-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: #cc0c39;
+  color: #fff;
+  font: 10px/16px Arial, sans-serif;
+  font-weight: 700;
+  text-align: center;
+}
+
+.alb-floating-progress {
+  height: 4px;
+  overflow: hidden;
+  background: #e3e6e6;
+  border-radius: 999px;
+}
+
+.alb-floating-progress-bar {
+  height: 100%;
+  width: 0;
+  background: #ff9900;
+  transition: width 0.2s ease;
+}
+
+.alb-dialog-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+  display: grid;
+  place-items: center;
+  background: rgba(15, 17, 17, 0.45);
+}
+
+.alb-dialog-overlay[hidden] {
+  display: none !important;
+}
+
+.alb-dialog {
+  width: min(640px, calc(100vw - 32px));
+  max-height: calc(100vh - 32px);
+  overflow: auto;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 8px 32px rgba(15, 17, 17, 0.25);
+  font: 14px/1.4 Arial, sans-serif;
+  color: #0f1111;
+}
+
+.alb-dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid #e3e6e6;
+}
+
+.alb-dialog-header h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.alb-dialog-close {
+  border: 0;
+  background: transparent;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  color: #565959;
+}
+
+.alb-dialog-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 8px 12px;
+  border-bottom: 1px solid #e3e6e6;
+}
+
+.alb-tab {
+  border: 0;
+  background: transparent;
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #565959;
+}
+
+.alb-tab.active {
+  background: #f7fafa;
+  color: #0f1111;
+  font-weight: 700;
+}
+
+.alb-dialog-body {
+  padding: 16px;
+}
+
+.alb-panel {
+  display: none;
+}
+
+.alb-panel.active {
+  display: block;
+}
+
+.alb-output {
+  width: 100%;
+  min-height: 180px;
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #d5d9d9;
+  border-radius: 6px;
+  resize: vertical;
+  font: 13px/1.4 Consolas, monospace;
+}
+
+.alb-copy-all {
+  padding: 8px 12px;
+  border: 1px solid #d5d9d9;
+  border-radius: 6px;
+  background: #ffd814;
+  cursor: pointer;
+}
+
+.alb-copy-all:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.alb-failure-list {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.alb-hint,
+.alb-status,
+.alb-extract-progress {
+  margin: 0 0 8px;
+  color: #565959;
+}
+
+.alb-extract-progress {
+  font-weight: 700;
+  color: #0f1111;
+}
+
+.alb-extract-actions,
+.alb-failure-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.alb-extract-actions button,
+.alb-failure-actions button,
+.alb-save-settings {
+  padding: 8px 12px;
+  border: 1px solid #d5d9d9;
+  border-radius: 6px;
+  background: #fff;
+  color: #0f1111;
+  font: inherit;
+  cursor: pointer;
+}
+
+.alb-cancel-batch {
+  margin-left: auto;
+}
+
+.alb-save-settings {
+  background: #ffd814;
+  border-color: #fcd200;
+  font-weight: 600;
+}
+
+.alb-settings-form {
+  display: grid;
+  gap: 10px;
+}
+
+.alb-settings-form label {
+  display: grid;
+  gap: 4px;
+  font-weight: 600;
+}
+
+.alb-settings-form input[type="text"],
+.alb-settings-form input[type="number"],
+.alb-settings-form select {
+  padding: 8px;
+  border: 1px solid #d5d9d9;
+  border-radius: 6px;
+  font: inherit;
+  color: #0f1111;
+  background: #fff;
+}
+
+.alb-separator-field {
+  display: grid;
+  gap: 10px;
+}
+
+.alb-separator-custom[hidden] {
+  display: none !important;
+}
+
+.alb-checkbox-setting {
+  font-weight: 500;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+}
+
+.alb-settings-saved {
+  margin: 0;
+  color: #067d62;
+  font-weight: 600;
+}
+
+.alb-failure-item {
+  margin-bottom: 12px;
+}
+
+.alb-failure-title {
+  font-weight: 700;
+}
+
+.alb-failure-url {
+  color: #007185;
+  word-break: break-all;
+}
+
+.alb-failure-reason {
+  color: #565959;
+  font-size: 13px;
+}
+
+.alb-history-list {
+  margin: 0 0 12px;
+  padding: 0;
+  list-style: none;
+}
+
+.alb-history-item {
+  padding: 10px 0;
+  border-bottom: 1px solid #e3e6e6;
+}
+
+.alb-history-item:last-child {
+  border-bottom: 0;
+}
+
+.alb-history-when {
+  font-weight: 700;
+}
+
+.alb-history-summary {
+  margin-top: 2px;
+  color: #565959;
+  font-size: 13px;
+}
+
+.alb-history-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.alb-history-actions button,
+.alb-clear-history {
+  padding: 6px 10px;
+  border: 1px solid #d5d9d9;
+  border-radius: 6px;
+  background: #fff;
+  color: #0f1111;
+  font: inherit;
+  cursor: pointer;
+}
+
+.alb-history-actions button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.alb-clear-history:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.alb-init-error {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2147483647;
+  padding: 10px 14px;
+  background: #cc0c39;
+  color: #fff;
+  font: 13px/1.3 Arial, sans-serif;
+}
