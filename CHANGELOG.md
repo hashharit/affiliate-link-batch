@@ -2,6 +2,12 @@
 
 All notable changes to Affiliate Link Batch are documented here.
 
+## [1.0.1] — 2026-06-24
+
+### Fixed
+
+- Move `homepage_url` to manifest root (MV3) — removes Firefox load warning
+
 ## [1.0.0] — 2026-06-24
 
 First public release.
