@@ -42,6 +42,12 @@ Do this silently before any other work. Do not summarize the whole file to the u
 
 Run when the session is ending or user runs `/affiliate-link-batch save`.
 
+**Context sources (best → weakest):**
+
+1. **Same interactive session** (`/affiliate-link-batch save` before `/exit`) — full conversation memory.
+2. **SessionEnd hook** — headless `grok --resume <sessionId>` reloads `~/.grok/sessions/.../updates.jsonl` for this chat.
+3. **Fallback** — `git status`, `git diff`, and files on disk only (no chat history).
+
 1. Read the current `.grok/PROJECT_CONTEXT.md` (or create from SESSION-START sources if missing).
 2. Update it to reflect **this session**:
    - Version number if `manifest.json` changed
