@@ -32,5 +32,6 @@ web-ext-config.cjs
 *.htm
 *_files/
 
-# Local agent context (not for public repo)
-.grok/
+# Local extended agent context (AGENTS.md + .grok/rules/ are auto-loaded by Grok)
+.grok/PROJECT_CONTEXT.md
+.grok/README.md
