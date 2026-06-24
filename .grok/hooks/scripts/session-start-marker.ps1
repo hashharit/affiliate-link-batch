@@ -1,9 +1,7 @@
-# SessionStart hook — confirms hooks are wired. Writes a timestamp file (fail-open).
+# SessionStart hook — writes a timestamp marker (fail-open).
 
 $Root = $env:GROK_WORKSPACE_ROOT
-if (-not $Root) {
-    exit 0
-}
+if (-not $Root) { exit 0 }
 
 $markerDir = Join-Path $Root ".grok"
 $markerFile = Join-Path $markerDir ".hook-session-start"

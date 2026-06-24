@@ -5,7 +5,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "pwsh -NoProfile -ExecutionPolicy Bypass -File .grok/hooks/scripts/invoke-hook.ps1 session-start-marker",
+            "command": "bash .grok/hooks/scripts/invoke-hook.sh session-start-marker",
             "timeout": 10
           }
         ]
@@ -16,7 +16,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "pwsh -NoProfile -ExecutionPolicy Bypass -File .grok/hooks/scripts/invoke-hook.ps1 session-end-update-context",
+            "command": "bash .grok/hooks/scripts/invoke-hook.sh session-end-update-context",
             "timeout": 180
           }
         ]

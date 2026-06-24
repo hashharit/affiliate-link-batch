@@ -2,6 +2,13 @@
 
 All notable changes to Affiliate Link Batch are documented here.
 
+## [1.0.2] — 2026-06-24
+
+### Fixed
+
+- `icon-128.png` corrected to 128×128 (AMO validation)
+- `strict_min_version` bumped to 142.0 for `data_collection_permissions` compatibility
+
 ## [1.0.1] — 2026-06-24
 
 ### Fixed

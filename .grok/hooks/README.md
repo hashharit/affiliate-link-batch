@@ -1,43 +1,43 @@
 # Project hooks (Grok CLI)
 
-Hooks in `.grok/hooks/` apply to the **Grok CLI / TUI** (`grok` command), not Cursor's Agent UI.
+Installed by the global `repo-context-automation` skill. Applies to **Grok CLI** (`grok` command).
 
-## Verify (Grok CLI)
+## Verify
 
 ```bash
-cd affiliate-link-batch
-grok inspect          # Hooks (N) should include "command project"
+cd <repo-root>
+grok inspect    # Hooks should include "command project"
 ```
 
 In a Grok session:
 
 ```
-/hooks-trust          # once, if project hooks are skipped
-/hooks                # Hooks tab → look under "Project"
-/hooks-list
+/hooks-trust    # once, if project hooks are skipped
+/hooks          # Hooks tab → Project
 ```
 
 Press `r` in the Hooks tab to reload after file changes.
 
-## Trust
+## Events
 
-Project hooks are **silently skipped** until the folder is trusted:
+| Event | Script | Behaviour |
+|-------|--------|-----------|
+| `SessionStart` | `invoke-hook` → `session-start-marker` | Writes `.grok/.hook-session-start` |
+| `SessionEnd` | `invoke-hook` → `session-end-update-context` | Headless `grok --resume` for SESSION-END |
 
-```
-/hooks-trust
-```
+**Empty session:** no user/agent work + clean git → no headless Grok.
 
-Or launch with `grok --trust`. Recorded in `~/.grok/trusted_folders.toml`.
+**Light session:** chat but nothing significant → Grok runs significance gate, skips `PROJECT_CONTEXT.md`.
 
-## Events configured
+## OS dispatch
 
-| Event | Script | When visible |
-|-------|--------|--------------|
-| `SessionStart` | `scripts/session-start-marker.ps1` | Writes `.grok/.hook-session-start` |
-| `SessionEnd` | `scripts/session-end-update-context.ps1` | Runs on `/exit` |
+| Platform | Entry | Runs |
+|----------|-------|------|
+| Windows | `invoke-hook.ps1` | `*.ps1` |
+| Linux/macOS | `invoke-hook.ps1` (pwsh) or `invoke-hook.sh` | `*.sh` |
 
-`SessionEnd` only appears in the hooks **list** at session start — it does not run until you exit.
+Default `session-context.json` uses **pwsh** (PowerShell 7+). On bash-only Linux, copy `session-context.bash.json` → `session-context.json`.
 
-## Cursor IDE
+## Cross-session memory
 
-If you use **Cursor Agent** (not Grok CLI), hooks live in `.cursor/hooks.json` instead — see that folder.
+`.grok/PROJECT_CONTEXT.md` — local handoff file (gitignored). Loaded at session start, updated at session end when significant.
