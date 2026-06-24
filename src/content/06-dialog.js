@@ -59,7 +59,7 @@
         els.copyAllBtn.disabled = !text;
       },
       setFailures(failures) {
-        els.failureList.innerHTML = "";
+        els.failureList.replaceChildren();
         for (const failure of failures) {
           const item = document.createElement("li");
           item.className = "alb-failure-item";
@@ -138,7 +138,7 @@
         els.historyTab.textContent = count > 0 ? `${base} (${count})` : base;
       },
       renderHistory(runs) {
-        els.historyList.innerHTML = "";
+        els.historyList.replaceChildren();
         const hasRuns = runs.length > 0;
         els.historyEmpty.hidden = hasRuns;
         els.clearHistoryBtn.disabled = !hasRuns;
@@ -187,97 +187,242 @@
       elements: els,
     };
 
+    function createLabeledInput(labelText, input) {
+      const label = document.createElement("label");
+      label.append(labelText, document.createTextNode(" "), input);
+      return label;
+    }
+
+    function createTabButton(name, active) {
+      const tab = document.createElement("button");
+      tab.type = "button";
+      tab.dataset.tab = name;
+      tab.className = active ? "alb-tab active" : "alb-tab";
+      tab.textContent = name.charAt(0).toUpperCase() + name.slice(1);
+      return tab;
+    }
+
+    function createPanel(name, active) {
+      const panel = document.createElement("section");
+      panel.dataset.panel = name;
+      panel.className = active ? "alb-panel active" : "alb-panel";
+      return panel;
+    }
+
     function buildDialog() {
       const overlay = document.createElement("div");
       overlay.id = OVERLAY_ID;
       overlay.className = "alb-dialog-overlay";
       overlay.hidden = true;
 
-      overlay.innerHTML = `
-        <div class="alb-dialog" role="dialog" aria-modal="true" aria-label="Affiliate Link Batch">
-          <header class="alb-dialog-header">
-            <h2>Affiliate Link Batch</h2>
-            <button type="button" class="alb-dialog-close" aria-label="Close">&times;</button>
-          </header>
-          <nav class="alb-dialog-tabs">
-            <button type="button" data-tab="extract" class="alb-tab active">Extract</button>
-            <button type="button" data-tab="output" class="alb-tab">Output</button>
-            <button type="button" data-tab="failures" class="alb-tab">Failures</button>
-            <button type="button" data-tab="history" class="alb-tab">History</button>
-            <button type="button" data-tab="settings" class="alb-tab">Settings</button>
-          </nav>
-          <div class="alb-dialog-body">
-            <section data-panel="extract" class="alb-panel active">
-              <p class="alb-extract-progress">0 / 0</p>
-              <p class="alb-status">Select products and click the floating button to start.</p>
-              <div class="alb-extract-actions">
-                <button type="button" class="alb-select-all">Select all on page</button>
-                <button type="button" class="alb-clear-all">Clear all</button>
-                <button type="button" class="alb-cancel-batch" disabled>Cancel</button>
-              </div>
-            </section>
-            <section data-panel="output" class="alb-panel">
-              <textarea class="alb-output" readonly placeholder="Successful lines appear here"></textarea>
-              <button type="button" class="alb-copy-all" disabled>Copy all</button>
-            </section>
-            <section data-panel="failures" class="alb-panel">
-              <ul class="alb-failure-list"></ul>
-              <div class="alb-failure-actions">
-                <button type="button" class="alb-copy-failed-urls" disabled>Copy failed URLs</button>
-                <button type="button" class="alb-retry-failed" disabled>Retry failed</button>
-              </div>
-            </section>
-            <section data-panel="history" class="alb-panel">
-              <p class="alb-hint">Saved on this device only. Up to ${ALB.runHistory.MAX_RUNS} recent runs.</p>
-              <p class="alb-history-empty" hidden>No runs yet. Complete a batch to see it here.</p>
-              <ul class="alb-history-list"></ul>
-              <button type="button" class="alb-clear-history" disabled>Clear history</button>
-            </section>
-            <section data-panel="settings" class="alb-panel">
-              <form class="alb-settings-form">
-                <label>Output template
-                  <input name="outputTemplate" type="text" />
-                </label>
-                <p class="alb-hint">Placeholders: {title} {affiliate_link} {url} {asin}</p>
-                <div class="alb-separator-field">
-                  <label>Separator
-                    <select name="separatorPreset"></select>
-                  </label>
-                  <label class="alb-separator-custom">Custom separator
-                    <input name="outputSeparatorCustom" type="text" placeholder="\\n or |" />
-                  </label>
-                </div>
-                <p class="alb-hint">Choose a preset or pick Custom. Use \\n for newline, \\t for tab.</p>
-                <label>Store ID (SiteStripe)
-                  <input name="associateStoreId" type="text" placeholder="e.g. yourstore-21" />
-                </label>
-                <label>Tracking ID (SiteStripe)
-                  <input name="associateTrackingId" type="text" placeholder="e.g. yourstore-21" />
-                </label>
-                <p class="alb-hint">Auto-filled from your first successful link in a batch. Edit if you use multiple stores.</p>
-                <label class="alb-checkbox-setting">
-                  <input name="useBackgroundApi" type="checkbox" />
-                  Use background API when possible (no product tab flash)
-                </label>
-                <label>Delay between products (ms)
-                  <input name="delayMs" type="number" min="2000" max="10000" step="100" />
-                </label>
-                <label>SiteStripe timeout (ms)
-                  <input name="siteStripeTimeoutMs" type="number" min="5000" max="60000" step="1000" />
-                </label>
-                <label class="alb-checkbox-setting">
-                  <input name="showDialogOnExtract" type="checkbox" />
-                  Show dialog when extraction starts
-                </label>
-                <button type="submit" class="alb-save-settings">Save settings</button>
-                <p class="alb-settings-saved" hidden>Saved.</p>
-              </form>
-            </section>
-          </div>
-        </div>
-      `;
+      const dialog = document.createElement("div");
+      dialog.className = "alb-dialog";
+      dialog.setAttribute("role", "dialog");
+      dialog.setAttribute("aria-modal", "true");
+      dialog.setAttribute("aria-label", "Affiliate Link Batch");
 
-      const presetSelect = overlay.querySelector('[name="separatorPreset"]');
+      const header = document.createElement("header");
+      header.className = "alb-dialog-header";
+      const title = document.createElement("h2");
+      title.textContent = "Affiliate Link Batch";
+      const closeBtn = document.createElement("button");
+      closeBtn.type = "button";
+      closeBtn.className = "alb-dialog-close";
+      closeBtn.setAttribute("aria-label", "Close");
+      closeBtn.textContent = "\u00d7";
+      header.append(title, closeBtn);
+
+      const tabs = document.createElement("nav");
+      tabs.className = "alb-dialog-tabs";
+      tabs.append(
+        createTabButton("extract", true),
+        createTabButton("output", false),
+        createTabButton("failures", false),
+        createTabButton("history", false),
+        createTabButton("settings", false)
+      );
+
+      const body = document.createElement("div");
+      body.className = "alb-dialog-body";
+
+      const extractPanel = createPanel("extract", true);
+      const extractProgress = document.createElement("p");
+      extractProgress.className = "alb-extract-progress";
+      extractProgress.textContent = "0 / 0";
+      const status = document.createElement("p");
+      status.className = "alb-status";
+      status.textContent = "Select products and click the floating button to start.";
+      const extractActions = document.createElement("div");
+      extractActions.className = "alb-extract-actions";
+      const selectAllBtn = document.createElement("button");
+      selectAllBtn.type = "button";
+      selectAllBtn.className = "alb-select-all";
+      selectAllBtn.textContent = "Select all on page";
+      const clearAllBtn = document.createElement("button");
+      clearAllBtn.type = "button";
+      clearAllBtn.className = "alb-clear-all";
+      clearAllBtn.textContent = "Clear all";
+      const cancelBtn = document.createElement("button");
+      cancelBtn.type = "button";
+      cancelBtn.className = "alb-cancel-batch";
+      cancelBtn.disabled = true;
+      cancelBtn.textContent = "Cancel";
+      extractActions.append(selectAllBtn, clearAllBtn, cancelBtn);
+      extractPanel.append(extractProgress, status, extractActions);
+
+      const outputPanel = createPanel("output", false);
+      const outputArea = document.createElement("textarea");
+      outputArea.className = "alb-output";
+      outputArea.readOnly = true;
+      outputArea.placeholder = "Successful lines appear here";
+      const copyAllBtn = document.createElement("button");
+      copyAllBtn.type = "button";
+      copyAllBtn.className = "alb-copy-all";
+      copyAllBtn.disabled = true;
+      copyAllBtn.textContent = "Copy all";
+      outputPanel.append(outputArea, copyAllBtn);
+
+      const failuresPanel = createPanel("failures", false);
+      const failureList = document.createElement("ul");
+      failureList.className = "alb-failure-list";
+      const failureActions = document.createElement("div");
+      failureActions.className = "alb-failure-actions";
+      const copyFailedBtn = document.createElement("button");
+      copyFailedBtn.type = "button";
+      copyFailedBtn.className = "alb-copy-failed-urls";
+      copyFailedBtn.disabled = true;
+      copyFailedBtn.textContent = "Copy failed URLs";
+      const retryFailedBtn = document.createElement("button");
+      retryFailedBtn.type = "button";
+      retryFailedBtn.className = "alb-retry-failed";
+      retryFailedBtn.disabled = true;
+      retryFailedBtn.textContent = "Retry failed";
+      failureActions.append(copyFailedBtn, retryFailedBtn);
+      failuresPanel.append(failureList, failureActions);
+
+      const historyPanel = createPanel("history", false);
+      const historyHint = document.createElement("p");
+      historyHint.className = "alb-hint";
+      historyHint.textContent = `Saved on this device only. Up to ${ALB.runHistory.MAX_RUNS} recent runs.`;
+      const historyEmpty = document.createElement("p");
+      historyEmpty.className = "alb-history-empty";
+      historyEmpty.hidden = true;
+      historyEmpty.textContent = "No runs yet. Complete a batch to see it here.";
+      const historyList = document.createElement("ul");
+      historyList.className = "alb-history-list";
+      const clearHistoryBtn = document.createElement("button");
+      clearHistoryBtn.type = "button";
+      clearHistoryBtn.className = "alb-clear-history";
+      clearHistoryBtn.disabled = true;
+      clearHistoryBtn.textContent = "Clear history";
+      historyPanel.append(historyHint, historyEmpty, historyList, clearHistoryBtn);
+
+      const settingsPanel = createPanel("settings", false);
+      const settingsForm = document.createElement("form");
+      settingsForm.className = "alb-settings-form";
+
+      const outputTemplateInput = document.createElement("input");
+      outputTemplateInput.name = "outputTemplate";
+      outputTemplateInput.type = "text";
+      settingsForm.append(
+        createLabeledInput("Output template", outputTemplateInput),
+        Object.assign(document.createElement("p"), {
+          className: "alb-hint",
+          textContent: "Placeholders: {title} {affiliate_link} {url} {asin}",
+        })
+      );
+
+      const separatorField = document.createElement("div");
+      separatorField.className = "alb-separator-field";
+      const presetSelect = document.createElement("select");
+      presetSelect.name = "separatorPreset";
+      const separatorCustomInput = document.createElement("input");
+      separatorCustomInput.name = "outputSeparatorCustom";
+      separatorCustomInput.type = "text";
+      separatorCustomInput.placeholder = "\\n or |";
+      const separatorCustomLabel = document.createElement("label");
+      separatorCustomLabel.className = "alb-separator-custom";
+      separatorCustomLabel.append("Custom separator", document.createTextNode(" "), separatorCustomInput);
+      separatorField.append(
+        createLabeledInput("Separator", presetSelect),
+        separatorCustomLabel
+      );
+      settingsForm.append(
+        separatorField,
+        Object.assign(document.createElement("p"), {
+          className: "alb-hint",
+          textContent: "Choose a preset or pick Custom. Use \\n for newline, \\t for tab.",
+        })
+      );
+
+      const storeIdInput = document.createElement("input");
+      storeIdInput.name = "associateStoreId";
+      storeIdInput.type = "text";
+      storeIdInput.placeholder = "e.g. yourstore-21";
+      const trackingIdInput = document.createElement("input");
+      trackingIdInput.name = "associateTrackingId";
+      trackingIdInput.type = "text";
+      trackingIdInput.placeholder = "e.g. yourstore-21";
+      settingsForm.append(
+        createLabeledInput("Store ID (SiteStripe)", storeIdInput),
+        createLabeledInput("Tracking ID (SiteStripe)", trackingIdInput),
+        Object.assign(document.createElement("p"), {
+          className: "alb-hint",
+          textContent: "Auto-filled from your first successful link in a batch. Edit if you use multiple stores.",
+        })
+      );
+
+      const useBackgroundApiInput = document.createElement("input");
+      useBackgroundApiInput.name = "useBackgroundApi";
+      useBackgroundApiInput.type = "checkbox";
+      const useBackgroundApiLabel = document.createElement("label");
+      useBackgroundApiLabel.className = "alb-checkbox-setting";
+      useBackgroundApiLabel.append(useBackgroundApiInput, " Use background API when possible (no product tab flash)");
+
+      const delayInput = document.createElement("input");
+      delayInput.name = "delayMs";
+      delayInput.type = "number";
+      delayInput.min = "2000";
+      delayInput.max = "10000";
+      delayInput.step = "100";
+
+      const timeoutInput = document.createElement("input");
+      timeoutInput.name = "siteStripeTimeoutMs";
+      timeoutInput.type = "number";
+      timeoutInput.min = "5000";
+      timeoutInput.max = "60000";
+      timeoutInput.step = "1000";
+
+      const showDialogInput = document.createElement("input");
+      showDialogInput.name = "showDialogOnExtract";
+      showDialogInput.type = "checkbox";
+      const showDialogLabel = document.createElement("label");
+      showDialogLabel.className = "alb-checkbox-setting";
+      showDialogLabel.append(showDialogInput, " Show dialog when extraction starts");
+
+      const saveSettingsBtn = document.createElement("button");
+      saveSettingsBtn.type = "submit";
+      saveSettingsBtn.className = "alb-save-settings";
+      saveSettingsBtn.textContent = "Save settings";
+      const settingsSaved = document.createElement("p");
+      settingsSaved.className = "alb-settings-saved";
+      settingsSaved.hidden = true;
+      settingsSaved.textContent = "Saved.";
+
+      settingsForm.append(
+        useBackgroundApiLabel,
+        createLabeledInput("Delay between products (ms)", delayInput),
+        createLabeledInput("SiteStripe timeout (ms)", timeoutInput),
+        showDialogLabel,
+        saveSettingsBtn,
+        settingsSaved
+      );
+      settingsPanel.appendChild(settingsForm);
+
+      body.append(extractPanel, outputPanel, failuresPanel, historyPanel, settingsPanel);
+      dialog.append(header, tabs, body);
+      overlay.appendChild(dialog);
+
       for (const preset of ALB.SEPARATOR_PRESETS) {
         const option = document.createElement("option");
         option.value = preset.id;

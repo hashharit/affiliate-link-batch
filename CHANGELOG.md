@@ -2,6 +2,12 @@
 
 All notable changes to Affiliate Link Batch are documented here.
 
+## [1.0.3] — 2026-06-24
+
+### Fixed
+
+- Replace `innerHTML` with DOM APIs in dialog and floating button (AMO lint clean)
+
 ## [1.0.2] — 2026-06-24
 
 ### Fixed

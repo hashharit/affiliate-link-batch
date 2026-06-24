@@ -1,12 +1,33 @@
 (function (ALB) {
   const ROOT_ID = "alb-floating-root";
 
-  const HISTORY_ICON = `
-    <svg class="alb-floating-history-icon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
-      <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.75"></circle>
-      <path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"></path>
-    </svg>
-  `;
+  function createHistoryIcon() {
+    const svgNs = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(svgNs, "svg");
+    svg.setAttribute("class", "alb-floating-history-icon");
+    svg.setAttribute("viewBox", "0 0 24 24");
+    svg.setAttribute("width", "16");
+    svg.setAttribute("height", "16");
+    svg.setAttribute("aria-hidden", "true");
+
+    const circle = document.createElementNS(svgNs, "circle");
+    circle.setAttribute("cx", "12");
+    circle.setAttribute("cy", "12");
+    circle.setAttribute("r", "9");
+    circle.setAttribute("fill", "none");
+    circle.setAttribute("stroke", "currentColor");
+    circle.setAttribute("stroke-width", "1.75");
+
+    const path = document.createElementNS(svgNs, "path");
+    path.setAttribute("d", "M12 7v5l3 2");
+    path.setAttribute("fill", "none");
+    path.setAttribute("stroke", "currentColor");
+    path.setAttribute("stroke-width", "1.75");
+    path.setAttribute("stroke-linecap", "round");
+
+    svg.append(circle, path);
+    return svg;
+  }
 
   ALB.createFloatingButton = function createFloatingButton({ onClick, onHistoryClick }) {
     const root = document.createElement("div");
@@ -39,7 +60,7 @@
     historyButton.className = "alb-floating-history";
     historyButton.title = "Run history";
     historyButton.setAttribute("aria-label", "Run history");
-    historyButton.innerHTML = HISTORY_ICON;
+    historyButton.appendChild(createHistoryIcon());
 
     const historyBadge = document.createElement("span");
     historyBadge.className = "alb-floating-history-badge";
