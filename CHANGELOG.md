@@ -2,6 +2,12 @@
 
 All notable changes to Affiliate Link Batch are documented here.
 
+## [1.0.4] — 2026-06-24
+
+### Changed
+
+- Extension icons (chain link + batch motif, orange gradient)
+
 ## [1.0.3] — 2026-06-24
 
 ### Fixed
